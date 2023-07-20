@@ -18,6 +18,7 @@ Route::get('/', [UploadController::class,"index"])->name("home");
 
 
 Route::post("upload",[UploadController::class,"store"])->name("file.store");
-Route::get("/{link}",[UploadController::class,"show"])->name("file.show");
 Route::get("download/{path}",[UploadController::class,"downloadFile"])->name("file.download");
+Route::delete("/delete/{file}",[UploadController::class,"destroy"])->name("file.delete");
 
+Route::get("/{link}",[UploadController::class,"show"])->name("file.show");

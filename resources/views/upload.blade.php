@@ -1,8 +1,8 @@
 
 <x-main-layout name="upload">
-
-    <form class="row g-3 w-75 m-auto" method="POST" action={{route("file.store")}} enctype="multipart/form-data">
-        @csrf
+  <form class="row g-3 w-75 m-auto" method="POST" action={{route("file.store")}} enctype="multipart/form-data">
+    @csrf
+    <x-alert name="success" class="alert-success" />
       
         <h1>Upload Your File</h1>
         <div class="col-12">
