@@ -19,12 +19,14 @@
             @endif
             <div class="container">
               <div class="input-group">
-         
-                <span id="copyButton" class="input-group-addon btn" title="Click to copy">
-                Copy
-                </span>
-                <input type="text" id="copyTarget" class="form-control" value={{$file->download_link}} readonly>
-                <span class="copied">Copied !</span>
+         @if ($file->download_link!=null)
+         <span id="copyButton" class="input-group-addon btn" title="Click to copy">
+         Copy
+         </span>
+         <input type="text" id="copyTarget" class="form-control" value='{{$file->download_link}}' readonly>
+         <span class="copied">Copied !</span>
+             
+         @endif
               </div>
             </div>
           </div>

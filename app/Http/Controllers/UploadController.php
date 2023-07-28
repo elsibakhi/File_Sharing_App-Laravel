@@ -7,6 +7,7 @@ use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class UploadController extends Controller
@@ -21,23 +22,24 @@ public function index(){
 
 public function store(FileRequest $request){
    $validated=$request->validated();
-$link=Str::random(20);
    
-$path=$validated["file"]->store("/","public");
-$validated["link"]=$link;
-$validated["path"]=$path;
-
-$file=File::create($validated);
+   
+   $path=$validated["file"]->store("/","public");
+   
+   $validated["path"]=$path;
+   
+   $file=File::create($validated);
+   $link=URL::signedRoute("file.show",["id"=>$file->id]);
 
 $file["size"]=($validated["file"]->getSize()/1000);
 $file["type"]=$validated["file"]->getMimeType();
 
-    return $this->show($link,true);
+    return $this->show($file->id,true,$link);
 }
 
 
-public function show($link,$delete=false){
-   $file= File::where("link","=",$link)->first();
+public function show($id,$delete=false,$link=null){
+   $file= File::where("id","=",$id)->first();
 if($file==null){
     abort(404);
 
@@ -45,8 +47,8 @@ if($file==null){
 
    $file["size"]=(Storage::disk("public")->size( $file->path)/1000); 
    $file["type"]=Storage::disk("public")->mimeType( $file->path);
-   $file["download_link"]=config("app.url")."/".$link;
-return view("show",["file"=>$file,"delete_permission"=>$delete]);
+   $file["download_link"]=$link;
+return view("show",["file"=>$file,"link"=>$link,"delete_permission"=>$delete]);
 }
 
 
