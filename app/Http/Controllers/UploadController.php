@@ -24,7 +24,7 @@ public function store(FileRequest $request){
    $validated=$request->validated();
    
    
-   $path=$validated["file"]->store("/","public");
+   $path=$validated["file"]->store("/");
    
    $validated["path"]=$path;
    
@@ -45,20 +45,20 @@ if($file==null){
 
 }
 
-   $file["size"]=(Storage::disk("public")->size( $file->path)/1000); 
-   $file["type"]=Storage::disk("public")->mimeType( $file->path);
+   $file["size"]=(Storage::size( $file->path)/1000); 
+   $file["type"]=Storage::mimeType( $file->path);
    $file["download_link"]=$link;
 return view("show",["file"=>$file,"link"=>$link,"delete_permission"=>$delete]);
 }
 
 
 function downloadFile($file_path){
-    $file = Storage::disk('public')->get($file_path);
-$type=Storage::disk("public")->mimeType($file_path);
+    $file = Storage::get($file_path);
+$type=Storage::mimeType($file_path);
 
 
 
-return Storage::disk("public")->download($file_path,headers:["Content-Type"=>$type]);
+return Storage::download($file_path,headers:["Content-Type"=>$type]);
 
 }
 function destroy($id){
