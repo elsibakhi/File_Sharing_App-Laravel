@@ -13,9 +13,11 @@ class mainLayout extends Component
      */
 
      protected $name;
-    public function __construct($name)
+     protected $path;
+    public function __construct($name,$path)
     {
         $this->name=$name;
+        $this->path=$path;
     }
 
     /**
@@ -23,6 +25,6 @@ class mainLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.main',["name"=>$this->name]);
+        return view('components.main',["name"=>$this->name,"path"=>$this->path]);
     }
 }

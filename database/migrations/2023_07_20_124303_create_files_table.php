@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('message')->nullable();
-            $table->string('link');
+            $table->foreignId("user_id")->constrained()->cascadeOnDelete();
             $table->string('path');
+         
+            $table->softDeletes();
 
             $table->timestamps();
         });

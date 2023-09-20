@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +19,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [UploadController::class,"index"])->name("home");
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard',[MainController::class,"index"])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
+Route::get("files/{file}/show", [UploadController::class, "show"])->middleware("signed")->name("files.show");
+Route::get("files/download/{file}", [UploadController::class, "downloadFile"])->name("files.download");
+Route::group(["middleware"=>['auth', 'verified']],function(){
+
+Route::resource("files",UploadController::class)->except(["show"]);
 
 
-Route::post("upload",[UploadController::class,"store"])->name("file.store");
-Route::get("download/{path}",[UploadController::class,"downloadFile"])->name("file.download");
-Route::delete("/delete/{file}",[UploadController::class,"destroy"])->name("file.delete");
 
-Route::get("/join/{id}",[UploadController::class,"show"])->middleware("signed")->name("file.show");
+});
+
+
+
